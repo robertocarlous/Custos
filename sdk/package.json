@@ -1,0 +1,32 @@
+{
+  "name": "@stock-oracle-guard/sdk",
+  "version": "0.1.0",
+  "description": "Off-chain Risk SDK for Stock Oracle Guard: pre-check OracleGuard safety status before submitting a transaction.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "example:live-testnet": "tsx examples/live-testnet-check.ts"
+  },
+  "peerDependencies": {
+    "viem": "^2.21.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.1",
+    "typescript": "^5.6.2",
+    "viem": "^2.21.0",
+    "vitest": "^2.1.1"
+  }
+}
