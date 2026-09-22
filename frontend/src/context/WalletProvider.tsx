@@ -47,6 +47,29 @@ function detectProvider(timeoutMs = 3000): Promise<EIP1193Provider | null> {
   });
 }
 
+/**
+ * viem wraps the raw EIP-1193 provider error (e.g. { code: 4902, ... } for an
+ * unrecognized chain) inside its own error types, sometimes nesting the
+ * original under `.cause` rather than exposing `.code` at the top level.
+ * Walk a few levels rather than assuming either shape.
+ */
+function findErrorCode(err: unknown, depth = 0): number | undefined {
+  if (!err || typeof err !== "object" || depth > 4) return undefined;
+  const code = (err as { code?: unknown }).code;
+  if (typeof code === "number") return code;
+  return findErrorCode((err as { cause?: unknown }).cause, depth + 1);
+}
+
+function describeWalletError(err: unknown, fallback: string): string {
+  if (err instanceof Error) {
+    // viem's error messages are verbose (multi-paragraph with a "Version:" footer);
+    // the short one-line summary is the first line and is what's worth showing.
+    const firstLine = err.message.split("\n")[0]?.trim();
+    return firstLine || fallback;
+  }
+  return fallback;
+}
+
 interface WalletContextValue {
   walletClient: WalletClient | null;
   address: `0x${string}` | null;
@@ -104,8 +127,10 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   }, [walletClient]);
 
   const refreshChain = useCallback(async () => {
-    if (!walletClient) return;
-    setChainId(await walletClient.getChainId());
+    if (!walletClient) return null;
+    const id = await walletClient.getChainId();
+    setChainId(id);
+    return id;
   }, [walletClient]);
 
   useEffect(() => {
@@ -138,7 +163,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
       await refreshChain();
     } catch (err) {
       setStatus("disconnected");
-      setError(err instanceof Error ? err.message : "Failed to connect wallet");
+      setError(describeWalletError(err, "Failed to connect wallet"));
     }
   }, [walletClient, refreshChain]);
 
@@ -148,12 +173,29 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     try {
       await walletClient.switchChain({ id: robinhoodChainTestnet.id });
     } catch (err) {
-      const code = (err as { code?: number })?.code;
-      if (code === 4902) {
+      // viem wraps the raw provider error; the EIP-3085 "unrecognized chain"
+      // code can show up at the top level or nested under `.cause`.
+      const code = findErrorCode(err);
+      if (code !== 4902) {
+        setError(describeWalletError(err, "Failed to switch network"));
+        return;
+      }
+      try {
         await walletClient.addChain({ chain: robinhoodChainTestnet });
         await walletClient.switchChain({ id: robinhoodChainTestnet.id });
-      } else {
-        setError(err instanceof Error ? err.message : "Failed to switch network");
+      } catch (retryErr) {
+        // Most wallets auto-switch once the chain is added; some report an
+        // error on this second call anyway even though the add succeeded.
+        // Trust refreshChain()'s actual read over the wallet's claim.
+        const idAfterAdd = await refreshChain();
+        if (idAfterAdd !== robinhoodChainTestnet.id) {
+          setError(
+            describeWalletError(
+              retryErr,
+              "Added Robinhood Chain Testnet, but couldn't switch to it automatically -- switch manually in your wallet.",
+            ),
+          );
+        }
         return;
       }
     }

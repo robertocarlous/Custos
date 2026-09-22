@@ -16,9 +16,19 @@ function fmt(v: bigint, decimals = 18, dp = 4): string {
 }
 
 export function LiveRunPanel({ onActivity }: { onActivity?: () => void }) {
-  const { walletClient, address, status, detecting, isCorrectChain, connect, switchToGuardChain } = useWallet();
+  const { walletClient, address, status, detecting, error, isCorrectChain, connect, switchToGuardChain } = useWallet();
   const { position, refresh } = usePoolPosition(address);
   const [feedAddress, setFeedAddress] = useState<Address | null>(null);
+  const [switching, setSwitching] = useState(false);
+
+  const handleSwitchChain = async () => {
+    setSwitching(true);
+    try {
+      await switchToGuardChain();
+    } finally {
+      setSwitching(false);
+    }
+  };
 
   useEffect(() => {
     oracleGuard.getTokenConfig(POOL_COLLATERAL.address).then((cfg) => setFeedAddress(cfg.priceFeed));
@@ -72,6 +82,7 @@ export function LiveRunPanel({ onActivity }: { onActivity?: () => void }) {
         <button className="button button--primary" onClick={connect} disabled={status === "connecting"}>
           {status === "connecting" ? "Connecting…" : "Connect wallet"}
         </button>
+        {error && <p className="callout" style={{ marginTop: 14, textAlign: "left" }}>{error}</p>}
       </div>
     );
   }
@@ -82,9 +93,17 @@ export function LiveRunPanel({ onActivity }: { onActivity?: () => void }) {
         <p className="muted" style={{ marginBottom: 16 }}>
           Wrong network -- switch to Robinhood Chain Testnet to continue.
         </p>
-        <button className="button button--primary" onClick={switchToGuardChain}>
-          Switch network
+        <button className="button button--primary" onClick={handleSwitchChain} disabled={switching}>
+          {switching ? "Switching…" : "Switch network"}
         </button>
+        {error ? (
+          <p className="callout" style={{ marginTop: 14, textAlign: "left" }}>{error}</p>
+        ) : (
+          <p className="muted" style={{ marginTop: 14, fontSize: "0.85rem" }}>
+            First time on this network? Your wallet will ask to add Robinhood Chain Testnet, then to switch --
+            look for a second prompt if the first one seems to do nothing.
+          </p>
+        )}
       </div>
     );
   }
