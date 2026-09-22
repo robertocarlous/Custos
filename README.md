@@ -6,9 +6,9 @@ update 24/5. Any lending or perps protocol on Robinhood Chain can import
 `OracleGuard` to get correct staleness handling, oracle-pause handling, and
 sequencer-uptime checks out of the box, instead of re-solving them from scratch.
 
-Built for the Arbitrum Open House Singapore Buildathon. This repo covers the
-smart contract and SDK track (Weeks 1-2 of the build plan); the dashboard/demo
-frontend (Week 3) is out of scope here.
+Built for the Arbitrum Open House Singapore Buildathon. Covers the smart
+contract and SDK track (Weeks 1-2 of the build plan) plus a live safety-status
+dashboard (Week 3, [`frontend/`](frontend/)).
 
 ## The gap
 
@@ -33,6 +33,9 @@ frontend (Week 3) is out of scope here.
   status before submitting a transaction.
 - [`keeper/`](keeper/) -- off-chain keeper script that pushes market-holiday
   overrides to `MarketCalendarRegistry` on a schedule.
+- [`frontend/`](frontend/) -- Vite/React safety-status dashboard, live against
+  the deployed testnet contracts via the Risk SDK: per-token guard status
+  (synced / paused / stale / sequencer-down) and a live pool activity feed.
 
 ## Architecture
 
@@ -46,6 +49,9 @@ MarketCalendarRegistry ──┘         │
                                     ▲
                                     │ pre-checked by
                         Risk SDK (TypeScript, off-chain)
+                                    ▲
+                                    │ consumed by
+                          Frontend dashboard (React)
 ```
 
 `MarketCalendarRegistry` defaults every Mon-Fri to open and every Sat/Sun to
@@ -57,9 +63,10 @@ sessions) rather than every single day.
 ```bash
 cd contracts && forge install && forge test
 
-cd ../sdk && npm install && npm run build && npm test
-
-cd ../keeper && npm install && npm run typecheck
+cd .. && npm install                    # installs sdk/keeper/frontend workspaces
+npm run build --workspace=sdk && npm test --workspace=sdk
+npm run typecheck --workspace=keeper
+npm run dev --workspace=frontend         # http://localhost:5173
 ```
 
 See each subdirectory's README for details.

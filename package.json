@@ -1,0 +1,10 @@
+{
+  "name": "stock-oracle-guard",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "sdk",
+    "keeper",
+    "frontend"
+  ]
+}
