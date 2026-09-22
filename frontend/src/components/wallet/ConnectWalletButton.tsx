@@ -5,7 +5,11 @@ function truncate(address: string): string {
 }
 
 export function ConnectWalletButton() {
-  const { address, status, isCorrectChain, connect, switchToGuardChain } = useWallet();
+  const { address, status, detecting, isCorrectChain, connect, switchToGuardChain } = useWallet();
+
+  if (status === "unavailable" && detecting) {
+    return <span className="nav__chain-pill">Checking for wallet…</span>;
+  }
 
   if (status === "unavailable") {
     return (

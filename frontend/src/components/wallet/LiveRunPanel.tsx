@@ -16,7 +16,7 @@ function fmt(v: bigint, decimals = 18, dp = 4): string {
 }
 
 export function LiveRunPanel({ onActivity }: { onActivity?: () => void }) {
-  const { walletClient, address, status, isCorrectChain, connect, switchToGuardChain } = useWallet();
+  const { walletClient, address, status, detecting, isCorrectChain, connect, switchToGuardChain } = useWallet();
   const { position, refresh } = usePoolPosition(address);
   const [feedAddress, setFeedAddress] = useState<Address | null>(null);
 
@@ -42,11 +42,22 @@ export function LiveRunPanel({ onActivity }: { onActivity?: () => void }) {
   const [repayAmount, setRepayAmount] = useState("200");
   const liquidateTx = useTxRunner(afterTx);
 
+  if (status === "unavailable" && detecting) {
+    return (
+      <div className="panel">
+        <p className="muted">Checking for a browser wallet…</p>
+      </div>
+    );
+  }
+
   if (status === "unavailable") {
     return (
       <div className="panel">
         <p className="muted">
-          No wallet extension detected. Install MetaMask (or any injected wallet) to run this live.
+          No wallet extension detected. Install MetaMask (or any injected wallet), then reload this page.
+          If you have one installed already, check your browser's extension settings -- some wallets only
+          inject into a page when given "site access" for it, and several installed at once can also
+          interfere with each other.
         </p>
       </div>
     );
