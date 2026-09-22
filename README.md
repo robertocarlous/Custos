@@ -88,10 +88,18 @@ A real liquidation has already run end-to-end against this deployment:
 yourself against a fresh account with
 [`contracts/script/liquidation-walkthrough.sh`](contracts/script/liquidation-walkthrough.sh).
 
+## Live frontend
+
+Deployed to Vercel: **[stock-oracle-guard.vercel.app](https://stock-oracle-guard.vercel.app)**
+-- reads live from the testnet deployment above, no setup required.
+
 ## Quickstart
 
 ```bash
-cd contracts && forge install && forge test
+cd contracts
+forge install foundry-rs/forge-std --no-git
+forge install OpenZeppelin/openzeppelin-contracts --no-git
+forge test --no-match-path "test/fork/*"
 
 cd .. && npm install                    # installs sdk/keeper/frontend workspaces
 npm run build --workspace=sdk && npm test --workspace=sdk
