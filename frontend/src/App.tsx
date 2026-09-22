@@ -3,6 +3,7 @@ import { SiteLayout } from "./layouts/SiteLayout";
 import { LandingPage } from "./pages/LandingPage";
 import { DashboardPage } from "./pages/DashboardPage";
 import { WalkthroughPage } from "./pages/WalkthroughPage";
+import { DocsPage } from "./pages/DocsPage";
 import { NotFoundPage } from "./pages/NotFoundPage";
 
 export default function App() {
@@ -12,6 +13,7 @@ export default function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/walkthrough" element={<WalkthroughPage />} />
+        <Route path="/docs" element={<DocsPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>

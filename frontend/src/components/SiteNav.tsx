@@ -7,6 +7,7 @@ const LINKS = [
   { to: "/", label: "Overview", end: true },
   { to: "/dashboard", label: "Dashboard" },
   { to: "/walkthrough", label: "Walkthrough" },
+  { to: "/docs", label: "Docs" },
 ];
 
 export function SiteNav() {

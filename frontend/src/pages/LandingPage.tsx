@@ -133,6 +133,10 @@ export function LandingPage() {
               </div>
             ))}
           </div>
+          <p className="muted" style={{ marginTop: 20 }}>
+            Building your own integration? <Link to="/docs">Read the SDK docs →</Link> -- installation,
+            a runnable quickstart, and the full API reference.
+          </p>
         </div>
       </section>
 

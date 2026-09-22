@@ -1107,8 +1107,307 @@ pre.code-block {
 }
 
 /* ---------------------------------------------------------------------- */
+/* Docs page                                                                */
+/* ---------------------------------------------------------------------- */
+
+.docs-shell {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 760px);
+  gap: 56px;
+  align-items: start;
+}
+
+.docs-sidebar {
+  position: sticky;
+  top: 84px;
+  max-height: calc(100vh - 104px);
+  overflow-y: auto;
+  padding-bottom: 24px;
+}
+
+.docs-sidebar__group {
+  margin-bottom: 22px;
+}
+
+.docs-sidebar__group-title {
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-faint);
+  margin-bottom: 8px;
+  padding-left: 10px;
+}
+
+.docs-sidebar__link {
+  display: block;
+  padding: 5px 10px;
+  border-radius: var(--radius-sm);
+  font-size: 0.83rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  border-left: 2px solid transparent;
+  line-height: 1.4;
+}
+
+.docs-sidebar__link:hover {
+  color: var(--text);
+}
+
+.docs-sidebar__link.active {
+  color: var(--accent);
+  border-left-color: var(--accent);
+  background: var(--accent-bg);
+  font-weight: 500;
+}
+
+.docs-content h1 {
+  scroll-margin-top: 90px;
+}
+
+.docs-content h2 {
+  font-size: 1.5rem;
+  margin: 52px 0 14px;
+  scroll-margin-top: 90px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+}
+
+.docs-content h2:first-of-type {
+  margin-top: 32px;
+}
+
+.docs-content p {
+  color: var(--text-muted);
+  margin: 0 0 16px;
+  line-height: 1.7;
+}
+
+.docs-content ul {
+  color: var(--text-muted);
+  line-height: 1.8;
+  margin: 0 0 16px;
+  padding-left: 20px;
+}
+
+.docs-content a {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+.docs-lead {
+  font-size: 1.05rem;
+  margin: 18px 0 28px;
+}
+
+.docs-badges {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 4px;
+}
+
+.docs-returns {
+  font-size: 0.85rem;
+}
+
+/* Code blocks + copy button */
+
+.code-block-wrap {
+  position: relative;
+  margin-bottom: 18px;
+}
+
+.code-block-wrap .code-block {
+  margin: 0;
+  padding-right: 56px;
+}
+
+/*
+ * `overflow-x: auto` only reserves padding-right once scrolled to the end --
+ * at rest, long single-line code renders straight through that padding, up
+ * to the border. This fades it out before the Copy button instead of
+ * letting text visually collide with it, blending into the block's own
+ * background (not the page background) so short lines show no seam.
+ */
+.code-block-wrap::after {
+  content: "";
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  bottom: 1px;
+  width: 64px;
+  background: linear-gradient(to right, transparent, var(--bg-elevated-2) 55%);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.code-block-label {
+  font-size: 0.72rem;
+  color: var(--text-faint);
+  margin-bottom: 6px;
+  font-family: var(--font-mono);
+}
+
+.copy-btn {
+  position: absolute;
+  z-index: 2;
+  top: 10px;
+  right: 10px;
+  background: var(--bg-elevated-2);
+  border: 1px solid var(--border-strong);
+  color: var(--text-muted);
+  border-radius: var(--radius-sm);
+  padding: 4px 9px;
+  font-size: 0.7rem;
+  font-family: var(--font-sans);
+  cursor: pointer;
+}
+
+.copy-btn:hover {
+  color: var(--text);
+}
+
+.copy-btn.copied {
+  color: var(--good);
+  border-color: var(--good);
+}
+
+/* Package manager tabs */
+
+.pm-tabs-wrap {
+  margin-bottom: 18px;
+}
+
+.pm-tabs {
+  display: flex;
+  gap: 2px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 0;
+}
+
+.pm-tabs button {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  font-weight: 600;
+  font-family: var(--font-mono);
+  padding: 8px 14px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+}
+
+.pm-tabs button:hover {
+  color: var(--text);
+}
+
+.pm-tabs button.active {
+  color: var(--text);
+  border-bottom-color: var(--accent);
+}
+
+.pm-tabs-wrap .code-block-wrap {
+  margin-top: 0;
+}
+
+.pm-tabs-wrap .code-block {
+  border-top-left-radius: 0;
+}
+
+/* API reference */
+
+.api-method {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg-elevated);
+  padding: 22px 24px;
+  margin-bottom: 20px;
+  scroll-margin-top: 90px;
+}
+
+.api-method__sig {
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  color: var(--accent);
+  margin-bottom: 12px;
+  word-break: break-word;
+}
+
+.api-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+  margin: 6px 0 18px;
+}
+
+.api-table th,
+.api-table td {
+  text-align: left;
+  padding: 7px 12px 7px 0;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-muted);
+  vertical-align: top;
+}
+
+.api-table th {
+  color: var(--text-faint);
+  font-weight: 500;
+  text-transform: uppercase;
+  font-size: 0.66rem;
+  letter-spacing: 0.05em;
+}
+
+.api-table code {
+  color: var(--text);
+}
+
+/* ---------------------------------------------------------------------- */
 /* Responsive                                                              */
 /* ---------------------------------------------------------------------- */
+
+@media (max-width: 900px) {
+  .docs-shell {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+  .docs-content {
+    min-width: 0;
+  }
+  .docs-sidebar {
+    position: static;
+    max-height: none;
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    min-width: 0;
+    max-width: 100%;
+    gap: 4px;
+    padding: 4px 0 20px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 28px;
+  }
+  .docs-sidebar__group {
+    margin-bottom: 0;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+  .docs-sidebar__group-title {
+    display: none;
+  }
+  .docs-sidebar__link {
+    white-space: nowrap;
+    border-left: none;
+    border: 1px solid var(--border);
+  }
+  .docs-sidebar__link.active {
+    border-color: var(--accent);
+  }
+}
 
 @media (max-width: 720px) {
   .nav__links {
