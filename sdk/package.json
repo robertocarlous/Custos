@@ -3,6 +3,13 @@
   "version": "0.1.0",
   "description": "Off-chain Risk SDK for Stock Oracle Guard: pre-check OracleGuard safety status before submitting a transaction.",
   "type": "module",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/robertocarlous/Custos.git",
+    "directory": "sdk"
+  },
+  "homepage": "https://github.com/robertocarlous/Custos/tree/main/sdk#readme",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {

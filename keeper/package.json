@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "description": "Off-chain keeper that pushes market-calendar holiday overrides to MarketCalendarRegistry.",
   "type": "module",
+  "license": "MIT",
+  "private": true,
   "scripts": {
     "update-calendar": "tsx src/updateCalendar.ts",
     "typecheck": "tsc --noEmit"

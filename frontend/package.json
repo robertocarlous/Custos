@@ -4,6 +4,7 @@
   "version": "0.1.0",
   "description": "Safety-status dashboard for Stock Oracle Guard, consuming the Risk SDK against the live Robinhood Chain testnet deployment.",
   "type": "module",
+  "license": "MIT",
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
